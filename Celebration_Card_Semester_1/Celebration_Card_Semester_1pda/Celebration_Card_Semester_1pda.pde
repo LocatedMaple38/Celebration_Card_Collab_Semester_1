@@ -6,11 +6,21 @@ PImage rectReturn;
 PImage rectSnowGlobe;
 PFont IntroductionFont;
 PFont InitialFont;
+PFont QuestionFont;
 String Introduction = "Merry Christmas!";
 String Initials = "Eric Barnes";
-color navy=#020BA7;
-color verdant=#00F512;
-color crimson=#B90202, resetDefaultInk=#FFFFFF;
+String Yes = "Yes";
+String No = "No";
+String Question = "Are you sure you want to quit?";
+color Gray=#AFAFAF;
+color Black=#000000;
+color Green=#00DE01;
+color Red=#DE001E;
+color DarkGreen=#02B703;
+color DarkRed=#AA021B;
+color pine=#00AA29;
+color crimson=#B90202;
+color resetDefaultInk=#FFFFFF;
 int appWidth, appHeight;
 int size;
 int brightnessNumber=255;
@@ -66,12 +76,18 @@ float xRectphrase, yRectphrase, widthRectphrase, heightRectphrase;
 float xRectinitials, yRectinitials, widthRectinitials, heightRectinitials;
 float xClame, yClame, widthClame, heightClame;
 float xClameOutline, yClameOutline, widthClameOutline, heightClameOutline;
+float xSnowFall, ySnowFall, SnowFallDiameter;
+float ConfirmationBackgroundx, ConfirmationBackgroundy, ConfirmationBackgroundwidth, ConfirmationBackgroundheight;
+float xConfirmationYes, yConfirmationYes, widthConfirmationYes, heightConfirmationYes;
+float xConfirmationNo, yConfirmationNo, widthConfirmationNo, heightConfirmationNo;
+float xConfirmationQuestion, yConfirmationQuestion, widthConfirmationQuestion, heightConfirmationQuestion;
 Boolean brightnessControl=false;
 Boolean nightmode=false;
 Boolean Redcontrol=false;
 Boolean Bluecontrol=false;
 Boolean Greencontrol=false;
-Boolean windowResizable=true;
+Boolean SnowFall=false;
+Boolean ExitConfirmation=false;
 void setup() {
   //
   int hourNightMode = hour();
@@ -89,8 +105,8 @@ void setup() {
   //
   //fullScreen();
   size(1000, 800);
- int appWidth = width;
- int appHeight = height;
+  int appWidth = width;
+  int appHeight = height;
   //
   String open = "/";
   String imagesPath = open;
@@ -99,6 +115,31 @@ void setup() {
   String exitImage = "exet.png";
   String nextImage = "next.png";
   String christmastreeImage = "Christmas Tree.jpg";
+  //
+  ConfirmationBackgroundx = appWidth*0;
+  ConfirmationBackgroundy = appHeight*0;
+  ConfirmationBackgroundwidth = appWidth-1;
+  ConfirmationBackgroundheight = appHeight-1;
+  //
+  xConfirmationYes = appWidth*1/4;
+  yConfirmationYes = appHeight*3/7;
+  widthConfirmationYes = appWidth*1/7;
+  heightConfirmationYes = appHeight*2/11;
+  //
+  xConfirmationNo = appWidth*3/5;
+  yConfirmationNo = yConfirmationYes;
+  widthConfirmationNo = appWidth*1/7;
+  heightConfirmationNo = heightConfirmationYes;
+  //
+  xConfirmationQuestion = appWidth*1/4;
+  yConfirmationQuestion = appHeight*1/6;
+  widthConfirmationQuestion = appWidth*1/2;
+  heightConfirmationQuestion = appHeight*2/13;
+  //
+  xRectSnowGlobe = appWidth*3/8;
+  yRectSnowGlobe = appHeight*7/12;
+  widthRectSnowGlobe = appWidth*6/8;
+  heightRectSnowGlobe = appHeight*3/8;
   //
   xRectIntroduction = appWidth*1/4;
   yRectIntroduction = appHeight*1/6;
@@ -121,7 +162,7 @@ void setup() {
   heightRectCard1 = appHeight*1/12;
   rectReturn = loadImage(imagesPath + Imagefolder + open + menuImage);
   //
-  xRectQuit = appWidth*18/20+20;
+  xRectQuit = appWidth*23/25;
   yRectQuit = appHeight*0/20;
   widthRectQuit = appWidth*1/12;
   heightRectQuit = appHeight*1/12;
@@ -138,11 +179,6 @@ void setup() {
   widthRectTree = appWidth*1/2;
   heightRectTree = appHeight*2/5;
   rectTree = loadImage(imagesPath + Imagefolder + open + christmastreeImage);
-  //
-  xRectSnowGlobe = appWidth*3/8;
-  yRectSnowGlobe = appHeight*7/12;
-  widthRectSnowGlobe = appWidth*6/8;
-  heightRectSnowGlobe = appHeight*3/8;
   //
   //circle(500, 400, 800);
   rect(xRectCard1, yRectCard1, widthRectCard1, heightRectCard1);
@@ -191,74 +227,18 @@ void setup() {
   rect(xRectinitials, yRectinitials, widthRectinitials, heightRectinitials);
   rect(xClameOutline, yClameOutline, widthClameOutline, heightClameOutline);
   rect(xClame, yClame, widthClame, heightClame);
-  fill(0, 200, 0);
-  rect(xRectBackground, yRectBackground, widthRectBackground, heightRectBackground);
-  fill(navy);
-  rect(xRectIntroduction, yRectIntroduction, widthRectIntroduction, heightRectIntroduction);
-  fill(navy);
-  rect(xRectTree, yRectTree, widthRectTree, heightRectTree);
   line(xRectLine1, yRectLine1, widthRectLine1, heightRectLine1);
   //
   IntroductionFont = createFont("Comic Sans MS", 55);
   InitialFont = createFont("Papyrus", 55);
+  QuestionFont = createFont("Arial", 55);
+  //
   } //End setup
   //
 void draw() {
   //
-  rect(xRectQuit, yRectQuit, widthRectQuit, heightRectQuit);
-  rect(xClame, yClame, widthClame, heightClame);
-  rect(xRectCard1, yRectCard1, widthRectCard1, heightRectCard1);
-  //
-   if ( brightnessControl==true );
-  {
-    if ( brightnessNumber<0 ) {
-      brightnessNumber=0;
-    } else if ( brightnessNumber>255 ) {
-      brightnessNumber=255;
-    } else {
-      //Empty ELSE
-    }
-    tint (255, brightnessNumber);
-  }
-  //
-  if ( Redcontrol==true ) {
-    tint ( 1, 255, 255 );
-  } else {
-  }
-  //
-  if ( Greencontrol==true ) {
-    tint ( 255, 1, 255 );
-  } else {
-  }
-  //
-  if ( Bluecontrol==true ) {
-    tint ( 255, 255, 1 );
-  } else {
-  }
-  //
-   if ( nightmode==true ) {
-    tint (NightmodeRed, NightmodeGreen, NightmodeBlue);
-  } else {
-  }
-  //
-  image(rectClame, xClame, yClame, widthClame, heightClame);
-  image(rectQuit, xRectQuit, yRectQuit, widthRectQuit, heightRectQuit);
-  image(rectReturn, xRectCard1, yRectCard1, widthRectCard1, heightRectCard1);
-  image(rectTree, xRectTree, yRectTree, widthRectTree, heightRectTree);
-  //
-  fill(crimson);
-  textAlign(CENTER, CENTER); 
-  size = 50;
-  textFont(IntroductionFont, 50); 
-  text(Introduction, xRectIntroduction, yRectIntroduction, widthRectIntroduction, heightRectIntroduction);
-  fill(resetDefaultInk);
-  //
-  fill(verdant);
-  textAlign(CENTER, CENTER); 
-  size = 80;
-  textFont(InitialFont, 50); 
-  text(Initials, xRectTree, yRectTree, widthRectTree, heightRectTree);
-  fill(resetDefaultInk);
+  if (ExitConfirmation==true) ExitConfirmation ();
+  if (ExitConfirmation==false) CardContents ();
   //
 } //End draw
 //
@@ -296,6 +276,9 @@ void keyPressed() {
     }
   }
   //
+  if(key==' ') SnowFall=true;
+  if(key==BACKSPACE) SnowFall=false;
+  //
     if (key==CODED && keyCode == UP || keyCode == DOWN) {
     brightnessControl = true;
     if (key==CODED && keyCode == UP) brightnessNumber+=5;
@@ -312,9 +295,11 @@ void keyPressed() {
 void mousePressed() {
   println("Mouse X: ", mouseX, "Mouse Y: ", mouseY);
   //
-  if ( mouseX>xRectQuit && mouseX<xRectQuit+widthRectQuit && mouseY>yRectQuit && mouseY<yRectQuit+heightRectQuit ) exit();
-  if ( mouseX>xClame && mouseX<xClame+widthClame && mouseY>yClame && mouseY<yClame+heightClame) println("clamed");
-  if ( mouseX>xRectCard1 && mouseX<xRectCard1+widthRectCard1 && mouseY>yRectCard1 && mouseY<yRectCard1+heightRectCard1) println("Returned");
+  if (mouseX>xRectQuit && mouseX<xRectQuit+widthRectQuit && mouseY>yRectQuit && mouseY<yRectQuit+heightRectQuit) ExitConfirmation=true;
+  if (mouseX>xConfirmationNo && mouseX<xConfirmationNo+widthConfirmationNo && mouseY>yConfirmationNo && mouseY<yConfirmationNo+heightConfirmationNo) ExitConfirmation=false;
+  if (mouseX>xClame && mouseX<xClame+widthClame && mouseY>yClame && mouseY<yClame+heightClame) println("clamed");
+  if (mouseX>xRectCard1 && mouseX<xRectCard1+widthRectCard1 && mouseY>yRectCard1 && mouseY<yRectCard1+heightRectCard1) println("Returned");
+  if (mouseX>xConfirmationYes && mouseX<xConfirmationYes+widthConfirmationYes && mouseY>yConfirmationYes && mouseY<yConfirmationYes+heightConfirmationYes) exit();
   //
 } //End mousePressed
 //
